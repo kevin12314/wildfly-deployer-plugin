@@ -3,7 +3,7 @@ WildFly Deployer Plugin
 
 Jenkins plugin that deploys applications (WAR or EAR files) to a WildFly or JBoss EAP server or server group.
 
-Read more: [WildFly Deployer Plugin](http://wiki.jenkins-ci.org/display/JENKINS/HOME)
+Read more: [WildFly Deployer Plugin](https://wiki.jenkins-ci.org/display/JENKINS/WildFly+Deployer+Plugin)
 
 
 Development Configuration
