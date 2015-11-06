@@ -33,7 +33,7 @@ THE SOFTWARE.
   </parent>
   <groupId>org.jenkins-ci.plugins</groupId>
   <artifactId>wildfly-deployer</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <name>WildFly Deployer Plugin</name>
@@ -65,7 +65,7 @@ THE SOFTWARE.
     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
     <url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    <tag>wildfly-deployer-1.0.1</tag>
+    <tag>HEAD</tag>
   </scm> 
    
   <repositories>
