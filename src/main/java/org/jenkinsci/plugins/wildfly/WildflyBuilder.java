@@ -57,7 +57,7 @@ import org.jboss.dmr.ModelNode;
  */
 public class WildflyBuilder extends Builder {
 
-    private final String war;
+    private String war;
     private final String host;
     private final String port;
     private final String username;
@@ -103,7 +103,7 @@ public class WildflyBuilder extends Builder {
     	    
     	char[] passwordAsCharArray;
     	CLI.Result result;
-    	String warPath, response, localPath, remotePath;
+    	String warPath, response, localPath, remotePath, tempString;
     	FilePath localFP = null;
     	
     	try {
@@ -144,6 +144,11 @@ public class WildflyBuilder extends Builder {
         	
     		listener.getLogger().println("Connected to WildFly at "+host+":"+port); 		
     		
+        	int idx=war.lastIndexOf("/");
+        	if (idx > 0) {
+        		tempString=war.substring(idx+1, war.length());
+        		war=tempString;
+        	}    		
     		// if application exists, undeploy it first...
     		if (applicationExists(cli, war, server)) {
     			listener.getLogger().println("Application "+war+" exists, undeploying...");
@@ -190,7 +195,7 @@ public class WildflyBuilder extends Builder {
     private boolean applicationExists(CLI cli, String war, String server) {
   
     	CLI.Result result;
-    	String response;
+    	String     response;
     	
     	if (server.length() > 0) {
     		result = cli.cmd("deployment-info --server-group="+server);
@@ -199,6 +204,7 @@ public class WildflyBuilder extends Builder {
     	}
     	
     	response = getWildFlyResponse(result);
+    	 	
     	if (response.indexOf(war) < 0)
     		return false;
     	else 
