@@ -24,6 +24,8 @@
 
 package org.jenkinsci.plugins.wildfly;
 
+import static org.apache.commons.lang.StringUtils.trim;
+
 import jenkins.model.Jenkins;
 import org.jenkinsci.remoting.RoleChecker;
 
@@ -57,7 +59,7 @@ import org.jboss.dmr.ModelNode;
  */
 public class WildflyBuilder extends Builder {
 
-    private String war;
+    private final String war;
     private final String host;
     private final String port;
     private final String username;
@@ -66,12 +68,12 @@ public class WildflyBuilder extends Builder {
 
     @DataBoundConstructor
     public WildflyBuilder(String war, String host, String port, String username, String password, String server) {
-        this.war = war;
-        this.host = host;
-        this.port = port;
-        this.username=username;
-        this.password=password;
-        this.server=server;
+        this.war = trim(war);
+        this.host = trim(host);
+        this.port = trim(port);
+        this.username = trim(username);
+        this.password = trim(password);
+        this.server = trim(server);
     }
 
     public String getWar() {
@@ -103,18 +105,10 @@ public class WildflyBuilder extends Builder {
     	    
     	char[] passwordAsCharArray;
     	CLI.Result result;
-    	String warPath, response, localPath, remotePath, tempString;
+    	String warPath, warFilename, response, localPath, remotePath;
     	FilePath localFP = null;
     	
     	try {
-    		    				  		  				   		  		
-    		host.trim();
-    		username.trim();
-    		password.trim();
-    		port.trim();
-    		server.trim();
-    		war.trim();
-    		  	   		
     		int portAsInt = Integer.parseInt(port);
     		   				    		
     		FilePath fp = new FilePath(build.getWorkspace(), war);
@@ -135,7 +129,6 @@ public class WildflyBuilder extends Builder {
     			warPath = remotePath;
     		
         	CLI cli = CLI.newInstance();   
-        	      	      	       	
         	if (username.length() > 0) {
         		passwordAsCharArray = password.toCharArray();
         		cli.connect(host, portAsInt, username, passwordAsCharArray);
@@ -146,16 +139,18 @@ public class WildflyBuilder extends Builder {
     		
         	int idx=war.lastIndexOf("/");
         	if (idx > 0) {
-        		tempString=war.substring(idx+1, war.length());
-        		war=tempString;
-        	}    		
+        		warFilename = war.substring(idx+1, war.length());
+        	} else {
+        		warFilename = war;
+        	}
+        	
     		// if application exists, undeploy it first...
-    		if (applicationExists(cli, war, server)) {
-    			listener.getLogger().println("Application "+war+" exists, undeploying...");
+    		if (applicationExists(cli, warFilename, server)) {
+    			listener.getLogger().println("Application "+warFilename+" exists, undeploying...");
     			if (server.length() > 0)
-    				result = cli.cmd("undeploy "+war+" --server-groups="+server);
+    				result = cli.cmd("undeploy "+warFilename+" --server-groups="+server);
     			else
-    				result = cli.cmd("undeploy "+war);
+    				result = cli.cmd("undeploy "+warFilename);
     			response = getWildFlyResponse(result);
     			if (response.indexOf("{\"outcome\" => \"failed\"") >= 0) {
         			listener.fatalError(response);
@@ -164,7 +159,7 @@ public class WildflyBuilder extends Builder {
             		listener.getLogger().println(response);
     		}
 
-    		listener.getLogger().println("Deploying "+war+" ...");
+    		listener.getLogger().println("Deploying "+warFilename+" ...");
     		if (server.length() > 0)
     			result = cli.cmd("deploy "+warPath+" --server-groups="+server);
     		else
