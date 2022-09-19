@@ -34,8 +34,8 @@ Installing to a Jenkins Server
 
 The Jenkins WAR file must be re-assembled (or the expanded WAR file modified) with the following changes:
 
-1.  Copy dependency wildfly-cli-8.2.1.Final.jar to <jenkins_war_root>/WEB-INF/lib.
-2.  Copy dependency log4j-over-slf4j-1.7.7.jar to <jenkins_war_root>/WEB-INF/lib.  (Not required if using Jenkins version 1.622 or later.)
+1.  Copy dependency wildfly-cli-18.1.2.Final-client.jar to <jenkins_war_root>/WEB-INF/lib.
+2.  Copy dependency log4j-over-slf4j-1.7.26.jar to <jenkins_war_root>/WEB-INF/lib.  (Not required if using Jenkins version 1.622 or later.)
 
 (Note: this is not ideal, but is required due to the crazy dynamic classloading behaviour in the WildFly libraries.)  
 
